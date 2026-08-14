@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add your 7pm check-in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#211C2E;
+    --ink-soft:#4B4560;
+    --cream:#FAF6EF;
+    --paper:#FFFFFF;
+    --hairline:#E4DFD3;
+    --dusk:#5B5480;
+    --amber:#E08A3C;
+    --amber-deep:#B96A22;
+    --sage:#6F9070;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:48px 20px;
+  }
+  .card{
+    width:100%;
+    max-width:520px;
+    background:var(--paper);
+    border:1px solid var(--hairline);
+    border-radius:20px;
+    padding:44px 40px 36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .arc{
+    display:flex;
+    gap:6px;
+    margin-bottom:28px;
+  }
+  .arc span{
+    flex:1;
+    height:5px;
+    border-radius:3px;
+    background:var(--hairline);
+    transition:background 0.25s ease;
+  }
+  .eyebrow{
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--dusk);
+    font-weight:600;
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:32px;
+    line-height:1.15;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  h1 em{
+    font-style:italic;
+    color:var(--amber-deep);
+  }
+  p.lede{
+    font-size:15px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 30px;
+  }
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input[type=text]{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:11px 13px;
+    border:1px solid var(--hairline);
+    border-radius:10px;
+    background:var(--cream);
+    color:var(--ink);
+    margin-bottom:22px;
+  }
+  input[type=text]:focus{
+    outline:none;
+    border-color:var(--dusk);
+  }
+  .meta-row{
+    display:flex;
+    gap:20px;
+    margin-bottom:28px;
+    padding:16px 18px;
+    background:var(--cream);
+    border-radius:12px;
+    border:1px solid var(--hairline);
+  }
+  .meta-item{flex:1;}
+  .meta-item .k{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--dusk);
+    font-weight:600;
+    margin-bottom:3px;
+  }
+  .meta-item .v{
+    font-size:15px;
+    font-weight:500;
+    color:var(--ink);
+    font-family:'Fraunces',serif;
+  }
+  button{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    padding:15px 20px;
+    border:none;
+    border-radius:11px;
+    background:var(--ink);
+    color:var(--cream);
+    cursor:pointer;
+    transition:transform 0.12s ease, background 0.2s ease;
+  }
+  button:hover{background:var(--amber-deep);}
+  button:active{transform:scale(0.98);}
+  .status{
+    margin-top:18px;
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--sage);
+    display:none;
+  }
+  .status.show{display:block;}
+  .status .dates{
+    color:var(--ink-soft);
+    font-size:12.5px;
+    margin-top:6px;
+  }
+  .foot{
+    margin-top:26px;
+    padding-top:20px;
+    border-top:1px solid var(--hairline);
+    font-size:12.5px;
+    color:var(--dusk);
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="arc" id="arc"></div>
+  <p class="eyebrow">Two-week check-in</p>
+  <h1>Fourteen nights,<br><em>one habit.</em></h1>
+  <p class="lede">Click below and this creates fourteen calendar events, one every night at 7:00&nbsp;PM, starting today. No app, no account &mdash; just a calendar file made for the exact day you open this.</p>
+
+  <label for="title">Event name</label>
+  <input type="text" id="title" value="Evening check-in" maxlength="80">
+
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="k">Starts</div>
+      <div class="v" id="startDate">&mdash;</div>
+    </div>
+    <div class="meta-item">
+      <div class="k">Time</div>
+      <div class="v">7:00 PM</div>
+    </div>
+    <div class="meta-item">
+      <div class="k">Ends</div>
+      <div class="v" id="endDate">&mdash;</div>
+    </div>
+  </div>
+
+  <button id="addBtn">Add to calendar</button>
+  <div class="status" id="status"></div>
+
+  <div class="foot">Downloads a single .ics file. Open it and your calendar app (Google, Apple, Outlook) will import all fourteen events at once.</div>
+</div>
+
+<script>
+  const DAYS = 14;
+  const HOUR = 19; // 7pm
+  const DURATION_HOURS = 1;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function fmtLocal(d){
+    return d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + 'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00';
+  }
+
+  function fmtUTCStamp(d){
+    return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z';
+  }
+
+  function niceDate(d){
+    return d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+  }
+
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate(), HOUR, 0, 0);
+  const end = new Date(start.getTime() + DURATION_HOURS*60*60*1000);
+  const lastOccurrence = new Date(start.getTime() + (DAYS-1)*24*60*60*1000);
+
+  document.getElementById('startDate').textContent = niceDate(start);
+  document.getElementById('endDate').textContent = niceDate(lastOccurrence);
+
+  // decorative 14-segment arc
+  const arc = document.getElementById('arc');
+  for (let i=0; i<DAYS; i++){
+    const seg = document.createElement('span');
+    arc.appendChild(seg);
+  }
+
+  document.getElementById('addBtn').addEventListener('click', function(){
+    const title = document.getElementById('title').value.trim() || 'Evening check-in';
+    const uid = 'checkin-' + Date.now() + '@personal';
+    const dtstamp = fmtUTCStamp(new Date());
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Daily Check-in Link//EN',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      'UID:' + uid,
+      'DTSTAMP:' + dtstamp,
+      'DTSTART:' + fmtLocal(start),
+      'DTEND:' + fmtLocal(end),
+      'RRULE:FREQ=DAILY;COUNT=' + DAYS,
+      'SUMMARY:' + title,
+      'DESCRIPTION:Daily 7pm check-in, ' + DAYS + ' nights starting ' + niceDate(start) + '.',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'daily-checkin.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // fill the arc
+    document.querySelectorAll('#arc span').forEach(s => s.style.background = 'var(--amber)');
+
+    const status = document.getElementById('status');
+    status.classList.add('show');
+    status.innerHTML = 'Saved. Open the downloaded file to add all ' + DAYS + ' events.<div class="dates">' + niceDate(start) + ' \u2192 ' + niceDate(lastOccurrence) + ', every night at 7:00 PM</div>';
+  });
+</script>
+
+</body>
+</html>
